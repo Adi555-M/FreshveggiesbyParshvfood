@@ -1,0 +1,298 @@
+// DOM Elements
+const homeLink = document.getElementById('homeLink');
+const aboutLink = document.getElementById('aboutLink');
+const contactLink = document.getElementById('contactLink');
+const homePage = document.getElementById('home');
+const aboutPage = document.getElementById('about');
+const contactPage = document.getElementById('contact');
+const contactForm = document.getElementById('contactForm');
+const howToOrderButton = document.getElementById('howToOrderButton');
+const orderHistoryButton = document.getElementById('orderHistoryButton');
+const howToOrderSection = document.getElementById('howToOrderSection');
+const orderHistorySection = document.getElementById('orderHistorySection');
+const backToOrderButton = document.getElementById('backToOrderButton');
+const backToOrderButton2 = document.getElementById('backToOrderButton2');
+const loginScreen = document.getElementById('loginScreen');
+const orderScreen = document.getElementById('orderScreen');
+const loginForm = document.getElementById('loginForm');
+const loginName = document.getElementById('loginName');
+const loginAddress = document.getElementById('loginAddress');
+const vegetableList = document.getElementById('vegetableList');
+const viewOrderButton = document.getElementById('viewOrderButton');
+const cartModal = document.getElementById('cartModal');
+const cartItems = document.getElementById('cartItems');
+const cartTotalAmount = document.getElementById('cartTotalAmount');
+const closeModal = document.querySelector('.close');
+
+// Check if user is already logged in
+const savedName = localStorage.getItem('userName');
+const savedAddress = localStorage.getItem('userAddress');
+
+if (savedName && savedAddress) {
+  loginScreen.classList.add('hidden');
+  orderScreen.classList.remove('hidden');
+}
+
+// Navigation Event Listeners
+homeLink.addEventListener('click', () => {
+  homePage.classList.remove('hidden');
+  aboutPage.classList.add('hidden');
+  contactPage.classList.add('hidden');
+  howToOrderSection.classList.add('hidden');
+  orderHistorySection.classList.add('hidden');
+});
+
+aboutLink.addEventListener('click', () => {
+  homePage.classList.add('hidden');
+  aboutPage.classList.remove('hidden');
+  contactPage.classList.add('hidden');
+  howToOrderSection.classList.add('hidden');
+  orderHistorySection.classList.add('hidden');
+});
+
+contactLink.addEventListener('click', () => {
+  homePage.classList.add('hidden');
+  aboutPage.classList.add('hidden');
+  contactPage.classList.remove('hidden');
+  howToOrderSection.classList.add('hidden');
+  orderHistorySection.classList.add('hidden');
+});
+
+// How to Order Button
+howToOrderButton.addEventListener('click', () => {
+  homePage.classList.add('hidden');
+  aboutPage.classList.add('hidden');
+  contactPage.classList.add('hidden');
+  howToOrderSection.classList.remove('hidden');
+  orderHistorySection.classList.add('hidden');
+});
+
+// Order History Button
+orderHistoryButton.addEventListener('click', () => {
+  homePage.classList.add('hidden');
+  aboutPage.classList.add('hidden');
+  contactPage.classList.add('hidden');
+  howToOrderSection.classList.add('hidden');
+  orderHistorySection.classList.remove('hidden');
+  loadOrderHistory();
+});
+
+// Back to Order Screen Buttons
+backToOrderButton.addEventListener('click', () => {
+  homePage.classList.remove('hidden');
+  aboutPage.classList.add('hidden');
+  contactPage.classList.add('hidden');
+  howToOrderSection.classList.add('hidden');
+  orderHistorySection.classList.add('hidden');
+});
+
+backToOrderButton2.addEventListener('click', () => {
+  homePage.classList.remove('hidden');
+  aboutPage.classList.add('hidden');
+  contactPage.classList.add('hidden');
+  howToOrderSection.classList.add('hidden');
+  orderHistorySection.classList.add('hidden');
+});
+
+// Contact Form Submission
+contactForm.addEventListener('submit', function (e) {
+  e.preventDefault();
+  const name = document.getElementById('contactName').value;
+  const email = document.getElementById('contactEmail').value;
+  const message = document.getElementById('contactMessage').value;
+
+  // Redirect to Gmail with pre-filled details
+  const subject = "New Contact Form Submission";
+  const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0AMessage: ${message}`;
+  const mailtoLink = `mailto:parshvfoods@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailtoLink;
+
+  // Clear form
+  contactForm.reset();
+  alert('Thank you for contacting us! Your message has been sent.');
+});
+
+// Login Form Submission
+loginForm.addEventListener('submit', function (e) {
+  e.preventDefault();
+  const name = loginName.value;
+  const address = loginAddress.value;
+  localStorage.setItem('userName', name);
+  localStorage.setItem('userAddress', address);
+  loginScreen.classList.add('hidden');
+  orderScreen.classList.remove('hidden');
+});
+
+// Vegetables Data
+const vegetables = [
+  { name: 'ટામેટાં', price: 30, unit: 'kg', options: ['kg', 'gram'] },
+  { name: 'ફુલાવર', price: 50, unit: 'kg', options: ['kg', 'gram'] },
+  // Add other vegetables here...
+];
+
+// Function to render vegetables
+function renderVegetables() {
+  vegetableList.innerHTML = vegetables.map(veg => `
+    <div class="vegetable-item">
+      <span>${veg.name} ₹${veg.price}/${veg.unit}</span>
+      <div class="unit-selection">
+        <input type="number" min="0" value="0" id="${veg.name.toLowerCase()}Qty">
+        <select id="${veg.name.toLowerCase()}Unit">
+          ${veg.options.map(option => `<option value="${option}">${option}</option>`).join('')}
+        </select>
+      </div>
+      <div class="price-display" id="${veg.name.toLowerCase()}Price">₹0.00</div>
+    </div>
+  `).join('');
+}
+
+// Function to calculate total price
+function calculateTotal() {
+  let total = 0;
+  vegetables.forEach(veg => {
+    const qtyInput = document.getElementById(`${veg.name.toLowerCase()}Qty`);
+    const unitSelect = document.getElementById(`${veg.name.toLowerCase()}Unit`);
+    const qty = parseFloat(qtyInput.value) || 0;
+    const unit = unitSelect.value;
+    let price = veg.price;
+
+    // Convert grams to kilograms if necessary
+    if (unit === 'gram') {
+      price = price / 1000;
+    }
+
+    const itemTotal = qty * price;
+    total += itemTotal;
+
+    // Update the price display for each vegetable
+    const priceDisplay = document.getElementById(`${veg.name.toLowerCase()}Price`);
+    priceDisplay.textContent = `₹${itemTotal.toFixed(2)}`;
+  });
+
+  // Update the total amount
+  const totalAmount = document.getElementById('totalAmount');
+  totalAmount.textContent = total.toFixed(2);
+}
+
+// Function to load order history
+function loadOrderHistory() {
+  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+  orderHistory.innerHTML = orders.map(order => `
+    <div class="order-item">
+      <p><strong>Name:</strong> ${order.name}</p>
+      <p><strong>Address:</strong> ${order.address}</p>
+      <p><strong>Order:</strong> ${order.items}</p>
+      <p><strong>Total:</strong> ₹${order.total}</p>
+      <p><strong>Date:</strong> ${order.date}</p>
+    </div>
+  `).join('');
+}
+
+// Event listener for quantity and unit changes
+vegetableList.addEventListener('input', calculateTotal);
+
+// Order Form Submission
+document.getElementById('orderForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const name = localStorage.getItem('userName');
+  const address = localStorage.getItem('userAddress');
+  const items = vegetables.map(veg => {
+    const qtyInput = document.getElementById(`${veg.name.toLowerCase()}Qty`);
+    const unitSelect = document.getElementById(`${veg.name.toLowerCase()}Unit`);
+    const qty = parseFloat(qtyInput.value) || 0;
+    const unit = unitSelect.value;
+    let price = veg.price;
+
+    // Convert grams to kilograms if necessary
+    if (unit === 'gram') {
+      price = price / 1000;
+    }
+
+    const itemTotal = qty * price;
+
+    if (qty > 0) {
+      return `${veg.name} - ${qty} ${unit} @ ₹${veg.price}/${veg.unit} = ₹${itemTotal.toFixed(2)}`;
+    }
+    return null;
+  }).filter(item => item !== null).join('\n');
+
+  const total = parseFloat(document.getElementById('totalAmount').textContent);
+
+  if (items.length === 0) {
+    alert('Please select at least one vegetable to place an order.');
+    return;
+  }
+
+  const order = {
+    name,
+    address,
+    items,
+    total,
+    date: new Date().toLocaleString(),
+  };
+
+  // Save order to history
+  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+  orders.push(order);
+  localStorage.setItem('orders', JSON.stringify(orders));
+
+  // Redirect to WhatsApp
+  const message = `Name: ${name}\nAddress: ${address}\nOrder:\n${items}\nTotal: ₹${total.toFixed(2)}`;
+  const whatsappUrl = `https://wa.me/9879876030?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+
+  // Reset form
+  document.getElementById('orderForm').reset();
+  calculateTotal();
+});
+
+// Function to display the current cart in the modal
+function viewOrder() {
+  const items = vegetables
+    .map((veg) => {
+      const qtyInput = document.getElementById(`${veg.name.toLowerCase()}Qty`);
+      const unitSelect = document.getElementById(`${veg.name.toLowerCase()}Unit`);
+      const qty = parseFloat(qtyInput.value) || 0;
+      const unit = unitSelect.value;
+
+      if (qty > 0) {
+        return `<div class="cart-item">
+                  <span>${veg.name} - ${qty} ${unit}</span>
+                  <span>₹${(qty * (unit === 'gram' ? veg.price / 1000 : veg.price)).toFixed(2)}</span>
+                </div>`;
+      }
+      return null;
+    })
+    .filter((item) => item !== null)
+    .join('');
+
+  const total = parseFloat(document.getElementById('totalAmount').textContent);
+
+  if (items.length === 0) {
+    cartItems.innerHTML = '<p>Your cart is empty. Please add some vegetables to view your order.</p>';
+  } else {
+    cartItems.innerHTML = items;
+  }
+
+  cartTotalAmount.textContent = total.toFixed(2);
+  cartModal.classList.remove('hidden');
+}
+
+// Add event listener for the "View Your Order" button
+viewOrderButton.addEventListener('click', viewOrder);
+
+// Close the modal when the close button is clicked
+closeModal.addEventListener('click', () => {
+  cartModal.classList.add('hidden');
+});
+
+// Close the modal when clicking outside the modal
+window.addEventListener('click', (e) => {
+  if (e.target === cartModal) {
+    cartModal.classList.add('hidden');
+  }
+});
+
+// Initial render
+renderVegetables();
+calculateTotal();

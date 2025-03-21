@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parshv Foods - Fresh Vegetable Order</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Add FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <!-- Notice Section -->
+  <div class="notice-bar">
+    🚚 Free Delivery on Orders Above ₹500! 🚚
+  </div>
+
+  <!-- Navigation Menu -->
+  <div class="navbar">
+    <a href="#home" id="homeLink"><i class="fas fa-home"></i> Home</a>
+    <a href="#about" id="aboutLink"><i class="fas fa-info-circle"></i> About Us</a>
+    <a href="#contact" id="contactLink"><i class="fas fa-envelope"></i> Contact Us</a>
+  </div>
+
+  <!-- Home Page -->
+  <div id="home" class="container">
+    <div id="loginScreen">
+      <h1>Welcome to Parshv Foods</h1>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginName"><i class="fas fa-user"></i> Your Name</label>
+          <input type="text" id="loginName" required>
+        </div>
+        <div class="form-group">
+          <label for="loginAddress"><i class="fas fa-map-marker-alt"></i> Delivery Address</label>
+          <input type="text" id="loginAddress" required>
+        </div>
+        <button type="submit" class="btn"><i class="fas fa-sign-in-alt"></i> Log In</button>
+      </form>
+    </div>
+
+    <div id="orderScreen" class="hidden">
+      <h1>Parshv Foods - Fresh Vegetable Order</h1>
+      <form id="orderForm">
+        <div class="vegetable-list" id="vegetableList">
+          <!-- Vegetables will be added here dynamically -->
+        </div>
+        <div class="total">
+          Total: ₹<span id="totalAmount">0.00</span>
+        </div>
+        <!-- Add the "View Your Order" button -->
+        <button type="button" class="btn" id="viewOrderButton"><i class="fas fa-shopping-cart"></i> View Your Order</button>
+        <button type="submit" class="btn"><i class="fab fa-whatsapp"></i> Place Order on WhatsApp</button>
+
+        <!-- Horizontal Line Separator -->
+        <hr class="separator">
+
+        <!-- Bottom Buttons -->
+        <div class="bottom-buttons">
+          <button type="button" class="btn" id="howToOrderButton"><i class="fas fa-question-circle"></i> How to Order</button>
+          <button type="button" class="btn" id="orderHistoryButton"><i class="fas fa-history"></i> Order History</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- About Us Page -->
+  <div id="about" class="container hidden">
+    <div class="about-us">
+      <h2>About Us</h2>
+      <p>Welcome to Parshv Foods! We are dedicated to providing fresh and high-quality vegetables to our customers. Our mission is to make healthy eating accessible and convenient for everyone.</p>
+    </div>
+  </div>
+
+  <!-- Contact Us Page -->
+  <div id="contact" class="container hidden">
+    <h2>Contact Us</h2>
+    <form class="contact-form" id="contactForm">
+      <input type="text" id="contactName" placeholder="Your Name" required>
+      <input type="email" id="contactEmail" placeholder="Your Email" required>
+      <textarea id="contactMessage" placeholder="Your Message" rows="5" required></textarea>
+      <button type="submit"><i class="fas fa-paper-plane"></i> Send Message</button>
+    </form>
+  </div>
+
+  <!-- How to Order Section -->
+  <div id="howToOrderSection" class="hidden how-to-order">
+    <h2>How to Order</h2>
+    <ol>
+      <li>Log in with your name and address.</li>
+      <li>Select the vegetables and quantities you want to order.</li>
+      <li>Click "Place Order on WhatsApp" to confirm your order.</li>
+      <li>You will be redirected to WhatsApp to finalize the order.</li>
+    </ol>
+    <button class="btn" id="backToOrderButton"><i class="fas fa-arrow-left"></i> Back to Order Screen</button>
+  </div>
+
+  <!-- Order History Section -->
+  <div id="orderHistorySection" class="hidden order-history">
+    <h2>Order History</h2>
+    <div id="orderHistory"></div>
+    <button class="btn" id="backToOrderButton2"><i class="fas fa-arrow-left"></i> Back to Order Screen</button>
+  </div>
+
+  <!-- Modal for Viewing the Cart -->
+  <div id="cartModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Your Cart</h2>
+      <div id="cartItems"></div>
+      <p class="total">Total: ₹<span id="cartTotalAmount">0.00</span></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
